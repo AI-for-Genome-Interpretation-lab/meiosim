@@ -179,7 +179,7 @@ positions, joins the master accession list as metadata,
 
 Please cite this package as:
 
-Marchal, A., & Raimondi, D. (2026). meiosim - a toolbox to simulate crosses and play with quantitative genetics in Python  [Computer software]. Zenodo. https://doi.org/10.5281/zenodo._______
+Marchal, A., & Raimondi, D. (2026). meiosim - a toolbox to simulate crosses and play with quantitative genetics in Python  [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.21134827
 
 ## Code
 

@@ -22,7 +22,7 @@ date-released: "2026-07-02"
 license: "GPL-3.0-or-later"
 repository-code: "https://github.com/ai-for-genome-interpretation-lab/meiosim"
 url: "https://github.com/ai-for-genome-interpretation-lab/meiosim"
-doi: "10.5281/zenodo._______"
+doi: "10.5281/zenodo.21134827"
 keywords:
   - "simulation"
   - "breeding"
