@@ -121,17 +121,15 @@ class Population():
             elif all(isinstance(item, str) for item in on):
                 mask = self.metadata['individual'].isin(on).values
             
-            elif all(isinstance(item, int) for item in on):
+            elif all(isinstance(item, (int, np.integer)) for item in on):
                 indices = np.array(on)
-                
                 if np.any(indices >= len(self.metadata)) or np.any(indices < 0):
                     raise ValueError("Indexes are out of scope")
-                
                 mask = np.zeros(len(self.metadata), dtype=bool)
                 mask[indices] = True
             
         else:
-            raise TypeError("'on' must be a dict, a list[int] or a list[str]")
+            raise TypeError("list items must be all str or all int")
             
         self.metadata = self.metadata[mask].reset_index(drop=True)
         self.genotypes = self.genotypes[mask, :]
