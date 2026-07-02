@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+title: "meiosim: a toolbox to simulate crosses and play with quantitative genetics in Python "
+abstract: >
+  meiosim provides a single, lightweight data structure that bundles
+  genotypes, individual metadata and a genetic map together. It includes
+  the operations breeders and quantitative geneticists reach for most often:
+  basic data manipulation, simulating meiosis and crosses, and a ready-to-use
+  Arabidopsis thaliana panel.
+type: software
+authors:
+  - family-names: "Marchal"
+    given-names: "Alexandre"
+    orcid: "https://orcid.org/0000-0002-2865-9865"
+    affiliation: "IGMM - CNRS"
+  - family-names: "Raimondi"
+    given-names: "Daniele"
+    orcid: "https://orcid.org/0000-0003-1157-1899"
+    affiliation: "IGMM - CNRS"
+version: "0.1.0"
+date-released: "2026-07-02"
+license: "GPL-3.0-or-later"
+repository-code: "https://github.com/ai-for-genome-interpretation-lab/meiosim"
+url: "https://github.com/ai-for-genome-interpretation-lab/meiosim"
+doi: "10.5281/zenodo._______"
+keywords:
+  - "simulation"
+  - "breeding"
+  - "meiosis"
+  - "arabidopsis"
