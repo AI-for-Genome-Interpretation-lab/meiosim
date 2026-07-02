@@ -7,7 +7,7 @@
 - a ready-to-use *Arabidopsis thaliana* panel.
 
 <div align="center">
-  <img src="img/pca.png" alt="Arabidopsis panel" width="750">
+  <img src="https://github.com/user-attachments/assets/8825fe6b-a844-410b-9ab2-306129f83fc9" alt="Arabidopsis panel" width="750">
 </div>
 
 ## Installation
