@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it using these metadata."
-title: "meiosim: a toolbox to simulate crosses and play with quantitative genetics in Python "
+title: "meiosim: a toolbox to simulate crosses and play with quantitative genetics in Python"
 abstract: >
   meiosim provides a single, lightweight data structure that bundles
   genotypes, individual metadata and a genetic map together. It includes
