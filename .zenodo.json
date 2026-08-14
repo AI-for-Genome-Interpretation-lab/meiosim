@@ -15,6 +15,12 @@
       "affiliation": "IGMM - CNRS"
     }
   ],
+  "keywords": [
+    "simulation",
+    "breeding",
+    "meiosis",
+    "arabidopsis"
+  ],
   "license": "GPL-3.0-or-later",
   "access_right": "open"
 }
