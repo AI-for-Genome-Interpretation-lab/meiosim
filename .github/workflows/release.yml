@@ -56,11 +56,3 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Create tag + GitHub release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create "v${{ needs.check.outputs.version }}" \
-            --title "v${{ needs.check.outputs.version }}" \
-            --generate-notes
