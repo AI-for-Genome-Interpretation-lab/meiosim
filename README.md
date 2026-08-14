@@ -40,7 +40,7 @@ aligned pieces of data:
 
 | Attribute    | Type            | Shape                          | Description                                                            |
 |--------------|-----------------|--------------------------------|------------------------------------------------------------------------|
-| `genotypes`  | `np.ndarray`    | `(n_individuals, n_markers)`   | Allele dosage coded `-1 / 0 / 1`; missing values are `np.nan`.          |
+| `genotypes`  | `np.ndarray`    | `(n_individuals, n_markers)`   | Allele dosage coded `0 / 1 / 2`; missing values are `-128`.          |
 | `metadata`   | `pd.DataFrame`  | `n_individuals` rows           | One row per individual. Columns are free-form.                   |
 | `map`        | `pd.DataFrame`  | `n_markers` rows               | Marker map; needs at least `chromosome` and `cM` columns.              |
 
