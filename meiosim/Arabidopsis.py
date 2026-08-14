@@ -55,10 +55,9 @@ class Arabidopsis(Population):
         else:
             indices = np.arange(max_SNPs)
 
-        # The source already stores allele dosage as 0/1/2 with -1 for missing
-        # calls, which is the meiosim convention up to the sentinel value.
+        # Convert to 0 / 1 / 2
         missing = SNPs == _SOURCE_MISSING
-        SNPs = np.ascontiguousarray(SNPs).astype(np.int8)
+        SNPs = np.ascontiguousarray(SNPs).astype(np.int8) * 2
         SNPs[missing] = MISSING
 
         # genetic map
