@@ -65,7 +65,7 @@ A shared `numpy` random generator (`rng`) makes every stochastic operation repro
 pop = Population(genotypes, metadata, map, seed = 42)
 ```
 
-Build a population directly from SNP data. `genotypes` is a `-1/0/1` matrix
+Build a population directly from SNP data. `genotypes` is a `0/1/2` matrix
 (`np.nan` allowed), `metadata` and `map` are DataFrames aligned to the rows and
 columns of `genotypes` respectively.
 
