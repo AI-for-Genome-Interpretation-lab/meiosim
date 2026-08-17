@@ -1,0 +1,26 @@
+{
+  "title": "meiosim - a toolbox to simulate crosses and play with quantitative genetics in Python",
+  "description": "meiosim provides a single, lightweight data structure that bundles genotypes, individual metadata and a genetic map together. It includes the operations breeders and quantitative geneticists reach for most often: basic data manipulation, simulating meiosis and crosses, and a ready-to-use Arabidopsis thaliana panel.",
+  "upload_type": "software",
+  "language": "eng",
+  "creators": [
+    {
+      "name": "Marchal, Alexandre",
+      "orcid": "0000-0002-2865-9865",
+      "affiliation": "IGMM - CNRS"
+    },
+    {
+      "name": "Raimondi, Daniele",
+      "orcid": "0000-0003-1157-1899",
+      "affiliation": "IGMM - CNRS"
+    }
+  ],
+  "keywords": [
+    "simulation",
+    "breeding",
+    "meiosis",
+    "arabidopsis"
+  ],
+  "license": "GPL-3.0-or-later",
+  "access_right": "open"
+}

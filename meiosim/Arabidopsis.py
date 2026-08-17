@@ -2,11 +2,14 @@ import h5py
 import numpy as np
 import pandas as pd
 import os
-from .Population import Population
+from .Population import Population, MISSING
 
 _pkg_dir = os.path.dirname(__file__)
 _data_dir = os.path.join(_pkg_dir, "data")
 _metdata_dir = os.path.join(_data_dir, "A. thaliana Master Accession List 26.01 - master_list_25.12.csv")
+
+# Missing-call code used by the source HDF5 panel.
+_SOURCE_MISSING = -1
 
 class Arabidopsis(Population):
 
@@ -38,10 +41,6 @@ class Arabidopsis(Population):
         if accessions.duplicated().any():
             raise ValueError("Duplicated accession IDs in the panel")
 
-        SNPs = SNPs.astype(float)
-        SNPs[SNPs == -1] = np.nan
-        SNPs = SNPs - 1 # 0,1,2 -> -1,0,1
-
         metadata = pd.read_csv(_metdata_dir)
         metadata = metadata.set_index('id').reindex(accessions.astype(int)).reset_index()
         metadata["individual"] = accessions.astype(str)
@@ -55,6 +54,11 @@ class Arabidopsis(Population):
             SNPs = SNPs[:, indices]
         else:
             indices = np.arange(max_SNPs)
+
+        # Convert to 0 / 1 / 2
+        missing = SNPs == _SOURCE_MISSING
+        SNPs = np.ascontiguousarray(SNPs).astype(np.int8) * 2
+        SNPs[missing] = MISSING
 
         # genetic map
         descents = np.diff(positions) < 0

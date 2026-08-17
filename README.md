@@ -40,7 +40,7 @@ aligned pieces of data:
 
 | Attribute    | Type            | Shape                          | Description                                                            |
 |--------------|-----------------|--------------------------------|------------------------------------------------------------------------|
-| `genotypes`  | `np.ndarray`    | `(n_individuals, n_markers)`   | Allele dosage coded `-1 / 0 / 1`; missing values are `np.nan`.          |
+| `genotypes`  | `np.ndarray`    | `(n_individuals, n_markers)`   | Allele dosage coded `0 / 1 / 2`; missing values are `-128`.          |
 | `metadata`   | `pd.DataFrame`  | `n_individuals` rows           | One row per individual. Columns are free-form.                   |
 | `map`        | `pd.DataFrame`  | `n_markers` rows               | Marker map; needs at least `chromosome` and `cM` columns.              |
 
@@ -65,7 +65,7 @@ A shared `numpy` random generator (`rng`) makes every stochastic operation repro
 pop = Population(genotypes, metadata, map, seed = 42)
 ```
 
-Build a population directly from SNP data. `genotypes` is a `-1/0/1` matrix
+Build a population directly from SNP data. `genotypes` is a `0/1/2` matrix
 (`np.nan` allowed), `metadata` and `map` are DataFrames aligned to the rows and
 columns of `genotypes` respectively.
 
@@ -157,23 +157,21 @@ line = f1.selfing(id1, n_generations=6)
 
 ## Arabidopsis dataset
 
-The 1001 genome collection of *A. thaliana* is provided as a resource.
-The **`Arabidopsis`** constructor base loader reads SNPs, accessions,
-positions, derives a genetic map and provides phenotypes.
-Optionally, down-samples to `n_SNPs` random markers (`n_SNPs=0` keeps them all).
+The 1001 genome collection of *A. thaliana* (The 1001 Genomes Consortium, 2016) filtered on the RegMap panel (Horton et al. 2012, Pisupati et al. 2017) is provided as a resource.
 
-The **`Arabidopsis`** data come from the following resources:
+The genetic map is built from the physical map assuming a constant 3.6 cM/Mb, simplifying the recombination landscape described by Salomé et al. (2012).
 
-Base loader for an *A. thaliana* SNP matrix. Reads SNPs, accessions and
-positions, joins the master accession list as metadata, 
+Phenotypes come from Grimm et al. (2017).
+
+The **`Arabidopsis`** constructor base loader reads SNPs, accessions, positions, derives the map and provides phenotypes. Optionally, down-samples to `n_SNPs` random markers (`n_SNPs=0` keeps them all).
 
 | Feature | Reference                                             |
 |---------|-------------------------------------------------------|
 | 1001 Arabidopsis genomes | The 1001 Genomes Consortium (2016). *1,135 Genomes Reveal the Global Pattern of Polymorphism in Arabidopsis thaliana.* Cell. |
-| 1001 Arabidopsis phenotypes | Grimm *et al.* (2017). *easyGWAS: A Cloud-Based Platform for Comparing the Results of Genome-Wide Association Studies.* The Plant Cell. |
-| Genetic map | Salomé *et al.* (2012). *The recombination landscape in Arabidopsis thaliana F2 populations.* Heredity. |
-| RegMap SNP panel | Horton *et al.* (2012). *Genome-wide patterns of genetic variation in worldwide Arabidopsis thaliana accessions from the RegMap panel.* Nature Genetics. |
-| RegMap SNP panel | Pisupati *et al.* (2017) - Verification of Arabidopsis stock collections using SNPmatch, a tool for genotyping high-plexed samples |
+| 1001 Arabidopsis phenotypes | Grimm et al. (2017). *easyGWAS: A Cloud-Based Platform for Comparing the Results of Genome-Wide Association Studies.* The Plant Cell. |
+| Genetic map | Salomé et al. (2012). *The recombination landscape in Arabidopsis thaliana F2 populations.* Heredity. |
+| RegMap SNP panel | Horton et al. (2012). *Genome-wide patterns of genetic variation in worldwide Arabidopsis thaliana accessions from the RegMap panel.* Nature Genetics. |
+| RegMap SNP panel | Pisupati et al. (2017) - Verification of Arabidopsis stock collections using SNPmatch, a tool for genotyping high-plexed samples |
 
 ## Citation
 

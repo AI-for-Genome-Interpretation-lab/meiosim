@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "meiosim"
-version = "0.1.0"
+dynamic = ["version"]
 readme = "README.md" 
 requires-python = ">=3.10"
 dependencies = [
@@ -15,6 +15,18 @@ dependencies = [
     "matplotlib",
     "seaborn",
 ]
+
+authors = [
+  {name = "Alexandre Marchal"},
+  {name = "Daniele Raimondi"},
+]
+license = "GPL-3.0-or-later"
+description = "A toolbox to simulate crosses and play with quantitative genetics in Python."
+[project.urls]
+Homepage = "https://github.com/ai-for-genome-interpretation-lab/meiosim"
+
+[tool.setuptools.dynamic]
+version = {attr = "meiosim._version.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["."]

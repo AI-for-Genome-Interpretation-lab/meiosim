@@ -8,6 +8,61 @@ import hashlib
 from concurrent.futures import ProcessPoolExecutor
 
 
+# Allele dosage is stored as int8 exclusively.
+#   genotypes  : 0, 1, 2         (count of the alternative allele)
+#   haplotypes : 0, 1            (allele carried by the gamete)
+#   MISSING    : -128            (sentinel, propagates through every operation)
+MISSING = np.int8(-128)
+
+_VALID_GENOTYPES = (0, 1, 2)
+
+
+def _coerce_genotypes(genotypes):
+    """Validate and cast a genotype matrix to the int8 0/1/2/MISSING convention.
+
+    An input that is already int8 is trusted and returned untouched: every
+    internal operation produces int8, so this keeps the constructor free of
+    cost on the hot paths (merge, split, subset, cross). Any other dtype is
+    treated as user input and fully validated. Floating point NaN is mapped
+    onto the MISSING sentinel.
+    """
+    array = np.asarray(genotypes)
+
+    if array.dtype == np.int8:
+        return array
+
+    if array.dtype.kind == "f":
+        missing = np.isnan(array)
+    elif array.dtype.kind in "iu":
+        missing = np.zeros(array.shape, dtype=bool)
+    else:
+        raise TypeError(
+            f"genotypes must be a numeric array, got dtype {array.dtype}"
+        )
+
+    recognised = missing | np.isin(array, _VALID_GENOTYPES) | (array == MISSING)
+    if not recognised.all():
+        offending = np.unique(array[~recognised])[:10]
+        raise ValueError(
+            "genotypes must be coded 0/1/2 with missing values as NaN or "
+            f"{int(MISSING)}; found unexpected values {offending}. Note that "
+            "the legacy -1/0/1 coding is no longer supported."
+        )
+
+    coerced = np.full(array.shape, MISSING, dtype=np.int8)
+    observed = ~missing
+    coerced[observed] = array[observed].astype(np.int8)
+    return coerced
+
+def _fingerprint(row):
+    """Stable 16-character identifier for one genotype row.
+
+    Relies on the int8 invariant: the byte representation is canonical, so
+    identifiers are reproducible across machines and package versions as long
+    as the coding convention itself does not change.
+    """
+    return hashlib.sha256(np.ascontiguousarray(row).tobytes()).hexdigest()[:16]
+
 def _meiosis_chromosome_task(task):
     """One task = one chromosome of one gamete of one progeny.
 
@@ -79,7 +134,7 @@ class Population():
         return merged
 
     def __init__(self, genotypes, metadata, map, seed=None):
-        self.genotypes = genotypes
+        self.genotypes = _coerce_genotypes(genotypes)
         self.metadata = metadata
         self.map = map
         self.seed = seed
@@ -87,11 +142,10 @@ class Population():
 
         if 'individual' not in self.metadata.columns:
             self.metadata['individual'] = [
-                hashlib.sha256(row.tobytes()).hexdigest()[:16]
-                for row in self.genotypes
+                _fingerprint(row) for row in self.genotypes
             ]
             
-        for parent in ["sire","dam"]:
+        for parent in ["sire", "dam"]:
             if parent not in self.metadata.columns:
                 self.metadata[parent] = ""
 
@@ -185,13 +239,18 @@ class Population():
 
         return pop1, pop2
 
-    def plot(self, group = None):
+    def drop_phases(self):
+        if not hasattr(self, 'phases') or self.phases is None:
+            return
+        else:
+            self.phases = None
+    
+    def plot(self, group=None):
 
-        metadata = self.metadata.copy()
-        genotypes = self.genotypes.copy()
+        metadata = self.metadata
 
-        imputer = SimpleImputer(strategy='mean')
-        genotypes_imputed = imputer.fit_transform(genotypes)
+        imputer = SimpleImputer(strategy='mean', missing_values=MISSING)
+        genotypes_imputed = imputer.fit_transform(self.genotypes)
 
         pca = PCA(n_components=2)
         pca_result = pca.fit_transform(genotypes_imputed)
@@ -265,11 +324,26 @@ class Population():
         ax.axvline(x=0, color='k', linewidth=0.5, alpha=0.5)
 
     def phasing(self):
-        genotypes = self.genotypes.copy()
-        imputer = SimpleImputer(strategy='most_frequent')
-        g = imputer.fit_transform(genotypes)
-        haplotypes = g / 2          # -1 -> -0.5, 0 -> 0, +1 -> +0.5
-        self.phases = [haplotypes, haplotypes]
+        """Derive haplotypes from genotypes, keeping only the exact part.
+
+        Homozygous dosages map onto an unambiguous haplotype pair; anything
+        else (heterozygotes, missing calls) is set to MISSING and propagates
+        from there.
+
+            0 -> (0, 0)
+            2 -> (1, 1)
+            1 or MISSING -> (MISSING, MISSING)
+
+        This is deliberately lossy on heterozygotes: meiosim does not infer
+        phase. Use an external phasing tool for heterozygous material.
+        """
+        haplotypes = np.full(self.genotypes.shape, MISSING, dtype=np.int8)
+        haplotypes[self.genotypes == 0] = 0
+        haplotypes[self.genotypes == 2] = 1
+
+        # Two independent arrays: aliasing them would make any downstream
+        # mutation of one haplotype silently corrupt the other.
+        self.phases = [haplotypes, haplotypes.copy()]
 
     def _chromosome_layout(self):
         """Precompute, once, (indices, cM) per chromosome."""
@@ -347,7 +421,7 @@ class Population():
 
         # --- a SINGLE pool, flat list distributed over n_cores ---
         n_snps = len(self.map)
-        gametes = np.zeros((n_desc, 2, n_snps), dtype=float)
+        gametes = np.full((n_desc, 2, n_snps), MISSING, dtype=np.int8)
         chunksize = max(1, len(tasks) // (n_cores * 4))
 
         with ProcessPoolExecutor(max_workers=n_cores) as executor:
@@ -357,13 +431,14 @@ class Population():
                 gametes[desc_idx, gamete_idx, idx] = hap
 
         # --- reassembly ---
-        all_genotypes = gametes[:, 0, :] + gametes[:, 1, :]
+        all_genotypes = np.add(gametes[:, 0, :], gametes[:, 1, :], dtype=np.int16)
+        all_genotypes[all_genotypes < 0] = MISSING
+        all_genotypes = all_genotypes.astype(np.int8)
 
         pedigree = []
         for desc_idx, (p1, p2) in enumerate(matings):
-            genotype = all_genotypes[desc_idx]
             pedigree.append({
-                'individual': hashlib.sha256(genotype.tobytes()).hexdigest()[:16],
+                'individual': _fingerprint(all_genotypes[desc_idx]),
                 'sire': self.metadata.iloc[p1]["individual"],
                 'dam': self.metadata.iloc[p2]["individual"],
             })
