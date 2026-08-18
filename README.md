@@ -173,7 +173,7 @@ The **`Arabidopsis`** constructor base loader reads SNPs, accessions, positions,
 | RegMap SNP panel | Horton et al. (2012). *Genome-wide patterns of genetic variation in worldwide Arabidopsis thaliana accessions from the RegMap panel.* Nature Genetics. |
 | RegMap SNP panel | Pisupati et al. (2017) - Verification of Arabidopsis stock collections using SNPmatch, a tool for genotyping high-plexed samples |
 | Vernalization response | Zhao et al. (2007). *An Arabidopsis Example of Association Mapping in Structured Samples.* PLoS Genetics 3(1): e4. |
-| Phenotype compilation | Atwell et al. (2010). *Genome-wide association study of 107 phenotypes in Arabidopsis thaliana inbred lines.* Nature 465: 627-631. |
+| Vernalization response | Atwell et al. (2010). *Genome-wide association study of 107 phenotypes in Arabidopsis thaliana inbred lines.* Nature 465: 627-631. |
 
 ⚠️ The two phenotype blocks come from independent experiments (same genotypes but different plants): 944 accessions for the easyGWAS traits, 112 for the vernalization series. Both are accession means. Flowering time is right-censored at 125 days.
 
