@@ -102,11 +102,12 @@ class Arabidopsis(Population):
         # ### Vernalization response
         # Flowering time after 0, 2, 4 and 8 weeks of vernalization, as accession
         # means in days from germination to first flower. Plants that had not
-        # flowered by the end of the experiment sit at the upper bound and are
-        # kept on the continuous scale.
+        # flowered by the end of the experiment sit at the upper bound (125 days)
+        # and are kept on the continuous scale.
         #
-        # Atwell et al. 2010 - Genome-wide association study of 107 phenotypes
-        # in Arabidopsis thaliana inbred lines
+        # Zhao et al. 2007 - An Arabidopsis Example of Association Mapping in
+        # Structured Samples, PLoS Genetics 3(1): e4
+        # Redistributed in the 107-phenotype compilation of Atwell et al. 2010
         # https://arapheno.1001genomes.org/study/12/
 
         vernalization = pd.read_csv(
