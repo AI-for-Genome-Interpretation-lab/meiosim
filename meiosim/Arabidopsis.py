@@ -85,14 +85,39 @@ class Arabidopsis(Population):
         )
 
         # ### Phenotypes
-        # Grimm et al. 2017 - easyGWAS: A Cloud-Based Platform for Comparing the Results of Genome-Wide Association Studies
+        # Anchored on the genotyped panel: accessions absent from the SNP matrix
+        # are dropped, accessions without phenotype are kept with missing values.
+        #
+        # Grimm et al. 2017 - easyGWAS: A Cloud-Based Platform for Comparing the
+        # Results of Genome-Wide Association Studies
         # https://arapheno.1001genomes.org/study/38/
 
-        pheno = pd.read_csv(os.path.join(_data_dir, "all_phenotypes_from_easyGWAS.csv"))
+        pheno = pd.DataFrame({"accession_id": metadata["individual"].astype(int)})
+
+        easygwas = pd.read_csv(
+            os.path.join(_data_dir, "all_phenotypes_from_easyGWAS.csv")
+        )
+        pheno = pheno.merge(easygwas, on="accession_id", how="left")
+
+        # ### Vernalization response
+        # Flowering time after 0, 2, 4 and 8 weeks of vernalization, as accession
+        # means in days from germination to first flower. Plants that had not
+        # flowered by the end of the experiment sit at the upper bound (125 days)
+        # and are kept on the continuous scale.
+        #
+        # Zhao et al. 2007 - An Arabidopsis Example of Association Mapping in
+        # Structured Samples, PLoS Genetics 3(1): e4
+        # Redistributed in the 107-phenotype compilation of Atwell et al. 2010
+        # https://arapheno.1001genomes.org/study/12/
+
+        vernalization = pd.read_csv(
+            os.path.join(_data_dir, "vernalization_flowering_time.csv")
+        )
+        pheno = pheno.merge(vernalization, on="accession_id", how="left")
+
         pheno["individual"] = pheno["accession_id"].astype(str)
+
         self.phenotypes = pheno
-
-
 
 
         
