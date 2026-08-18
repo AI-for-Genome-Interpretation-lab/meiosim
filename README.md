@@ -161,7 +161,7 @@ The 1001 genome collection of *A. thaliana* (The 1001 Genomes Consortium, 2016) 
 
 The genetic map is built from the physical map assuming a constant 3.6 cM/Mb, simplifying the recombination landscape described by Salomé et al. (2012).
 
-Phenotypes come from Grimm et al. (2017).
+Phenotypes come from Grimm et al. (2017) and Atwell et al. (2010).
 
 The **`Arabidopsis`** constructor base loader reads SNPs, accessions, positions, derives the map and provides phenotypes. Optionally, down-samples to `n_SNPs` random markers (`n_SNPs=0` keeps them all).
 
@@ -172,6 +172,7 @@ The **`Arabidopsis`** constructor base loader reads SNPs, accessions, positions,
 | Genetic map | Salomé et al. (2012). *The recombination landscape in Arabidopsis thaliana F2 populations.* Heredity. |
 | RegMap SNP panel | Horton et al. (2012). *Genome-wide patterns of genetic variation in worldwide Arabidopsis thaliana accessions from the RegMap panel.* Nature Genetics. |
 | RegMap SNP panel | Pisupati et al. (2017) - Verification of Arabidopsis stock collections using SNPmatch, a tool for genotyping high-plexed samples |
+| Vernalization response | Atwell et al. (2010). *Genome-wide association study of 107 phenotypes in Arabidopsis thaliana inbred lines.* Nature. |
 
 ## Citation
 
