@@ -175,7 +175,7 @@ The **`Arabidopsis`** constructor base loader reads SNPs, accessions, positions,
 | Vernalization response | Zhao et al. (2007). *An Arabidopsis Example of Association Mapping in Structured Samples.* PLoS Genetics 3(1): e4. |
 | Phenotype compilation | Atwell et al. (2010). *Genome-wide association study of 107 phenotypes in Arabidopsis thaliana inbred lines.* Nature 465: 627-631. |
 
-⚠️ The two blocks come from independent experiments: 944 accessions for the easyGWAS traits, 162 for the vernalization series, no shared plants. Both are accession means. Flowering time is right-censored at 125 days, mostly at the low doses.
+⚠️ The two blocks come from independent experiments (same genotypes but different plants): 944 accessions for the easyGWAS traits, 112 for the vernalization series. Both are accession means. Flowering time is right-censored at 125 days, mostly at the low doses.
 
 ## Citation
 
